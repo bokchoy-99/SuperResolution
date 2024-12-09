@@ -10,6 +10,7 @@ using Lightmapping = UnityEngine.Experimental.GlobalIllumination.Lightmapping;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Experimental.Rendering.RenderGraphModule;
 using UnityEngine.Profiling;
+using JetBrains.Annotations;
 
 namespace UnityEngine.Rendering.Universal
 {
@@ -179,6 +180,9 @@ namespace UnityEngine.Rendering.Universal
         // asset.
         private readonly UniversalRenderPipelineAsset pipelineAsset;
 
+        // modify by yzl
+        public static bool m_UseTinyTAA = false;
+
         /// <inheritdoc/>
         public override string ToString() => pipelineAsset?.ToString();
 
@@ -306,6 +310,9 @@ namespace UnityEngine.Rendering.Universal
 #else
             useRenderGraph = false;
 #endif
+
+            // modify by yzl
+            m_UseTinyTAA = pipelineAsset.useTinyTAA;
 
             SetHDRState(cameras);
 

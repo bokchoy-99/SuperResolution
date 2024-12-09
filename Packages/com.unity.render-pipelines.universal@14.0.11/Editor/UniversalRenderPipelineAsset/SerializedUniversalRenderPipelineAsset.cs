@@ -16,6 +16,9 @@ namespace UnityEditor.Rendering.Universal
         public SerializedProperty lodCrossFadeDitheringTypeProp { get; }
         public SerializedProperty storeActionsOptimizationProperty { get; }
 
+        // modify by yzl
+        public SerializedProperty useTinyTAA { get; }
+
         public SerializedProperty hdr { get; }
         public SerializedProperty hdrColorBufferPrecisionProp { get; }
         public SerializedProperty msaa { get; }
@@ -91,6 +94,9 @@ namespace UnityEditor.Rendering.Universal
             supportsTerrainHolesProp = serializedObject.FindProperty("m_SupportsTerrainHoles");
             enableLODCrossFadeProp = serializedObject.FindProperty("m_EnableLODCrossFade");
             lodCrossFadeDitheringTypeProp = serializedObject.FindProperty("m_LODCrossFadeDitheringType");
+
+            // modify by yzl
+            useTinyTAA = serializedObject.FindProperty("m_UseTinyTAA");
 
             hdr = serializedObject.FindProperty("m_SupportsHDR");
             hdrColorBufferPrecisionProp = serializedObject.FindProperty("m_HDRColorBufferPrecision");

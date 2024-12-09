@@ -303,8 +303,15 @@ namespace UnityEngine.Rendering.Universal
             Matrix4x4 jitterMat = Matrix4x4.identity;
 
             //czadd
-            //bool isJitter = cameraData.IsTemporalAAEnabled();
-            bool isJitter = true;
+            bool isJitter = cameraData.IsTemporalAAEnabled();
+            if (UniversalRenderPipeline.m_UseTinyTAA)
+            {
+                isJitter = true;
+            }
+            else
+            {
+                isJitter = cameraData.IsTemporalAAEnabled();
+            }
             if (isJitter)
             {
                 int taaFrameCountOffset = cameraData.taaSettings.jitterFrameCountOffset;

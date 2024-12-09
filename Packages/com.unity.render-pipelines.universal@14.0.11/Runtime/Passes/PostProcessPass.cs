@@ -1566,41 +1566,44 @@ namespace UnityEngine.Rendering.Universal
 
             // czadd
             //---------------------------------------------------------------------------------------------
-            var lastFrameRtDesc = cameraData.cameraTargetDescriptor;
-            lastFrameRtDesc.msaaSamples = 1;
-            lastFrameRtDesc.depthBufferBits = 0;
-            lastFrameRtDesc.width = cameraData.pixelWidth;
-            lastFrameRtDesc.height = cameraData.pixelHeight;
+            if (UniversalRenderPipeline.m_UseTinyTAA)
+            {
+                var lastFrameRtDesc = cameraData.cameraTargetDescriptor;
+                lastFrameRtDesc.msaaSamples = 1;
+                lastFrameRtDesc.depthBufferBits = 0;
+                lastFrameRtDesc.width = cameraData.pixelWidth;
+                lastFrameRtDesc.height = cameraData.pixelHeight;
 
-            int multipassId = 0;
+                int multipassId = 0;
 #if ENABLE_VR && ENABLE_XR_MODULE
-            multipassId = cameraData.xr.multipassId;
+                multipassId = cameraData.xr.multipassId;
 #endif
 
-            if (cameraData.xr.multipassId != 0)
-            {
-                RenderingUtils.ReAllocateIfNeeded(ref lastFrame1, lastFrameRtDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_LastFrameTexture");
-                lastFrame = lastFrame1;
+                if (cameraData.xr.multipassId != 0)
+                {
+                    RenderingUtils.ReAllocateIfNeeded(ref lastFrame1, lastFrameRtDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_LastFrameTexture");
+                    lastFrame = lastFrame1;
+                }
+                else
+                {
+                    RenderingUtils.ReAllocateIfNeeded(ref lastFrame0, lastFrameRtDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_LastFrameTexture");
+                    lastFrame = lastFrame0;
+                }
+
+                var testRtDesc = cameraData.cameraTargetDescriptor;
+                testRtDesc.msaaSamples = 1;
+                testRtDesc.depthBufferBits = 0;
+                testRtDesc.width = renderingData.cameraData.pixelWidth;
+                testRtDesc.height = renderingData.cameraData.pixelHeight;
+                RenderingUtils.ReAllocateIfNeeded(ref taaDes, testRtDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_TaaDes");
+
+                cmd.SetGlobalTexture(m_UpscaledTarget.name, m_UpscaledTarget.nameID);//_UpscaledTexture
+                cmd.SetGlobalTexture(lastFrame.name, lastFrame.nameID);
+
+                Blitter.BlitCameraTexture(cmd, m_UpscaledTarget, taaDes, m_Materials.tinyTaa, 0);
+                Blitter.BlitCameraTexture2D(cmd, taaDes, lastFrame);
+                sourceTex = taaDes;
             }
-            else
-            {
-                RenderingUtils.ReAllocateIfNeeded(ref lastFrame0, lastFrameRtDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_LastFrameTexture");
-                lastFrame = lastFrame0;
-            }
-
-            var testRtDesc = cameraData.cameraTargetDescriptor;
-            testRtDesc.msaaSamples = 1;
-            testRtDesc.depthBufferBits = 0;
-            testRtDesc.width = renderingData.cameraData.pixelWidth;
-            testRtDesc.height = renderingData.cameraData.pixelHeight;
-            RenderingUtils.ReAllocateIfNeeded(ref taaDes, testRtDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_TaaDes");
-
-            cmd.SetGlobalTexture(m_UpscaledTarget.name, m_UpscaledTarget.nameID);//_UpscaledTexture
-            cmd.SetGlobalTexture(lastFrame.name, lastFrame.nameID);
-
-            Blitter.BlitCameraTexture(cmd, m_UpscaledTarget, taaDes, m_Materials.tinyTaa, 0);
-            Blitter.BlitCameraTexture2D(cmd, taaDes, lastFrame);
-            sourceTex = taaDes;
 
             //---------------------------------------------------------------------------------------------
 

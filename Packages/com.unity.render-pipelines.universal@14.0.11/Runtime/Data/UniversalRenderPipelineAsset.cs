@@ -564,6 +564,9 @@ namespace UnityEngine.Rendering.Universal
         // minimum, the lut being encoded in log. Lower sizes would work better with an additional
         // 1D shaper lut but for now we'll keep it simple.
 
+        // modify by yzl
+        [SerializeField] bool m_UseTinyTAA = false;
+
         /// <summary>
         /// The minimum size of the color grading LUT.
         /// </summary>
@@ -1097,6 +1100,13 @@ namespace UnityEngine.Rendering.Universal
         {
             get { return m_UpscalingFilter; }
             set { m_UpscalingFilter = value; }
+        }
+
+        // modify by yzl
+        public bool useTinyTAA
+        {
+            get { return m_UseTinyTAA; }
+            set { m_UseTinyTAA = value; }
         }
 
         /// <summary>

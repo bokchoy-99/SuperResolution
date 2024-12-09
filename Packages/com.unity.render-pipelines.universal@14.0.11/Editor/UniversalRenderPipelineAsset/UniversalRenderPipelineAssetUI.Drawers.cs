@@ -163,6 +163,9 @@ namespace UnityEditor.Rendering.Universal
             {
                 ++EditorGUI.indentLevel;
 
+                // modify by yzl
+                EditorGUILayout.PropertyField(serialized.useTinyTAA, Styles.useTinyTAAText);
+
                 EditorGUILayout.PropertyField(serialized.fsrOverrideSharpness, Styles.fsrOverrideSharpness);
 
                 // We put the FSR sharpness override value behind an override checkbox so we can tell when the user intends to use a custom value rather than the default.
